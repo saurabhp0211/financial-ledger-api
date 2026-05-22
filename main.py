@@ -6,10 +6,20 @@ from typing import List
 from utils import hash_password
 import models
 from database import engine, get_db
+import jwt
+from datetime import datetime, timedelta, timezone
+from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordRequestForm
 
 
 
 models.Base.metadata.create_all(bind=engine)
+
+SECRET_KEY="SUPER_SECRET_KEY_do_not_share"
+ALGORITHM="HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+oauth2_scheme=OAuth2PasswordBearer(tokenUrl="login")
 
 
 app=FastAPI(title="Saurabh's Expense Tracker")
@@ -44,6 +54,23 @@ def get_user(user_id:int,db:Session=Depends(get_db)):
     if not user:
         raise HTTPException(status_code=404,detail="User not found")
     return user
+
+
+@app.post("/login")
+def login(form_data: OAuth2PasswordRequestForm=Depends(), db:Session=Depends(get_db)):
+    user=db.query(models.User).filter(models.User.email==form_data.username).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid Email or Password")
+    
+    from utils import verify_password
+    if not verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="Invalid Email or Password")
+    
+    expire=datetime.now(timezone.utc)+timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    token_data={"sub":user.email, "exp":expire}
+    encoded_jwt=jwt.encode(token_data,SECRET_KEY, algorithm=ALGORITHM)
+
+    return {"access_token":encoded_jwt, "token_type":"bearer"}
 
 
 
