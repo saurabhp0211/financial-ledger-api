@@ -37,7 +37,7 @@ class ExpenseResponse(ExpenseBase):
     id:int
 
     class Config:
-        from_attributes= True
+        from_attributes:True
 
 class ExpenseUpdate(BaseModel):
     title: Optional[str]=None

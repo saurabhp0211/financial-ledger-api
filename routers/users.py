@@ -8,7 +8,7 @@ import jwt
 import models
 from database import get_db
 from schemas import UserCreate, UserResponse
-from utils import hash_password, verify_password
+from utils import hash_password, verify_pw
 
 router= APIRouter(tags=["Identity & Authentication"])
 
@@ -52,10 +52,10 @@ def login(form_data: OAuth2PasswordRequestForm=Depends(), db:Session=Depends(get
     if not user:
         raise HTTPException(status_code=400, detail="Invalid Email or Password")
     
-    if not verify_password(form_data.password,user.hashed_password):
+    if not verify_pw(form_data.password,user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid Email or Password")
     
-    expire=datetime.mow(timezone.utc)+timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire=datetime.now(timezone.utc)+timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     token_data={"sub":user.email,"exp":expire}
     encoded_jwt=jwt.encode(token_data,SECRET_KEY,algorithm=ALGORITHM)
 
