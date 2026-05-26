@@ -21,7 +21,7 @@ class UserCreate(UserBase):
     password:str
 
 class ExpenseCreate(ExpenseBase):
-    owner_id:int
+    pass
 
 
 # Schema for reading an expense
