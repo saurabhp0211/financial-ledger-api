@@ -18,8 +18,8 @@ router= APIRouter(tags=["Identity & Authentication"])
 def create_user(user: UserCreate,db:Session=Depends(get_db)):
     db_user=db.query(models.User).filter(models.User.email==user.email).first()
 
-    if db_user:
-        raise HTTPException(status_code=400,detail="Email already registered")
+    # if db_user:
+    #     raise HTTPException(status_code=400,detail="Email already registered")
     
     hashed_pwd=hash_password(user.password)
     new_user=models.User(email=user.email,hashed_password=hashed_pwd)

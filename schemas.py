@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
-from datetime import date
+from datetime import date,datetime
 
 
 # the base schema where we define what exactly goes inside the expense record we are updating
@@ -11,14 +11,14 @@ class ExpenseBase(BaseModel):
     expense_date: Optional[date]= Field(default_factory=date.today)
 
 class UserBase(BaseModel):
-    email:str
+    email:EmailStr
 
 
 
 # input from the user
 class UserCreate(UserBase):
-    email:EmailStr
     password:str
+    phone_number:Optional[str]=None
 
 class ExpenseCreate(ExpenseBase):
     pass
@@ -27,17 +27,22 @@ class ExpenseCreate(ExpenseBase):
 # Schema for reading an expense
 class UserResponse(UserBase):
     id:int
-    email:EmailStr
+    phone_number:Optional[str]=None
+    created_at:datetime
+
 
     class Config:
-        from_attributes:True
+        from_attributes=True
 
 
 class ExpenseResponse(ExpenseBase):
     id:int
+    owner_id:int
+    created_at: datetime
+    owner: UserResponse
 
     class Config:
-        from_attributes:True
+        from_attributes=True
 
 class ExpenseUpdate(BaseModel):
     title: Optional[str]=None
