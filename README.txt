@@ -11,11 +11,7 @@ The Storage Generation (models.py): Your code initializes a row object: models.E
 The Commit: db.commit() pushes the row down the pipeline, and the data is permanently etched onto the disk within your SQLite database.
 
 
-(venv) saurabhkumarpandey@Saurabhs-MacBook-Air equipay-backend % for i in 1 2; do  curl -s -w "\n" -X POST http://localhost:8000/groups/2/settlements     -H "Authorization: Bearer $TOKEN"    -H "Content-Type: application/json"     -d '{"receiver_id": 3, "amount": 333.00}’ &done; wait
-for quote> 
-(venv) saurabhkumarpandey@Saurabhs-MacBook-Air equipay-backend % for i in 1 2; do  curl -s -w "\n" -X POST http://localhost:8000/groups/2/settlements     -H "Authorization: Bearer $TOKEN"    -H "Content-Type: application/json"     -d '{"receiver_id": 3, "amount": 333.00}’ &done; wait
-for quote> 
-(venv) saurabhkumarpandey@Saurabhs-MacBook-Air equipay-backend % 
+
 
 
 
